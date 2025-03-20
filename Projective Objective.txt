@@ -1,0 +1,62 @@
+1. Current Job Portal lacks personalized and adaptive approach. We will include this in our project.
+
+2. Job Seekers can connect with Potential Employer through out platform.
+
+3. Suggest Training Coerce to bridge skill gaps!
+
+4. Competency Diagnostic Score calculation 
+
+5. Course recommendation through test/assessments
+
+6. AI-powered Job/Training Recommendation Systems (Skills/ Experience/ Preferences)
+
+7. Adaptive Learning pathways: Give Personalized Leering Pathways (Provide Courses time to time and verify the progress)
+
+8. Personalized real time Job market insights dashboard and in-demand skills and Trending Job roles (Based o user skill and competency)
+   Interactive Visualization (Graphical Display and Custom Fields)
+
+9. Skill Verification and Certifications: Verifying and Certifying Skill through Assessments
+   Share Batches and Certificates in LinkedIn Directly (if not available ask user to for it and store it in the database)
+
+10. Resume Wizard that takes user data from dashboard and allow to edit details if needed and generate pdf
+
+11. Community Forum: Community peer Connects among themselves and connect with mentor 
+
+
+Out of the box thinking: 
+
+1. AI powered Mentor
+
+2. Peer Learning Network (Group Projects) 
+
+3. AI Powered Predictive job market forecasting (General / IT Specific)
+
+
+
+
+
+
+
+
+
+
+Database:
+
+
+1. Job Seekers Account 
+ ---> Certificate
+ ---> Resume
+
+2. Job Recruiter
+3. Job Database
+
+4 Skill Gap Database (MongoDB)
+---> Skill Gap
+---> Question Answers
+---> Course Dataset
+---> 
+
+5. Question and Response (MondoDB)
+	---> Collects UserID
+6. Mentor 
+
