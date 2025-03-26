@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Recommendation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        label, input, button {
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+            border-radius: 10px;
+        }
+        .job-card {
+            padding: 15px;
+            border: 1px solid #ddd;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            background-color: white;
+        }
+        .job-card h3 {
+            margin: 0 0 10px;
+            font-size: 18px;
+            color: #007bff;
+        }
+        .job-card p {
+            margin: 5px 0;
+            line-height: 1.5;
+        }
+        .apply-btn {
+            display: inline-block;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .apply-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Job Recommendation System</h1>
+
+<form id="jobForm">
+    <label for="skills">Enter your skills (comma-separated):</label>
+    <input type="text" id="skills" name="skills" placeholder="e.g., Python, Data Analysis, Machine Learning" required>
+    <button type="submit">Get Job Recommendation</button>
+</form>
+
+<div class="result" id="result" style="display:none;">
+    <h3>Recommended Job: <span id="recommendedJobTitle"></span></h3>
+    
+    <div id="jobRecommendations">
+        <!-- Job cards will be injected here -->
+    </div>
+</div>
+
+<div class="error" id="error" style="display:none;">
+    <h3>Error:</h3>
+    <p id="errorMessage"></p>
+</div>
+
+<script>
+    document.getElementById('jobForm').addEventListener('submit', function (e) {
+        e.preventDefault();  // Prevent form submission
+
+        // Get the user input (skills)
+        const skills = document.getElementById('skills').value.trim();
+
+        // Check if skills input is not empty
+        if (!skills) {
+            showError('Please enter your skills.');
+            return;
+        }
+
+        // Prepare the data to be sent to the server
+        const data = JSON.stringify({ skills: skills });
+
+        // Send a POST request to the Flask API
+        fetch('http://127.0.0.1:5000/recommend', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: data
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.status === 'success') {
+                showRecommendation(result.first_model_recommendation, result.second_model_recommendations);
+            } else {
+                showError(result.message);
+            }
+        })
+        .catch(error => {
+            showError('An error occurred while connecting to the server.');
+            console.error('Error:', error);
+        });
+    });
+
+    // Function to display the job recommendation
+    function showRecommendation(recommendedJobTitle, jobRecommendations) {
+        document.getElementById('result').style.display = 'block';
+        document.getElementById('recommendedJobTitle').textContent = recommendedJobTitle;
+
+        const jobContainer = document.getElementById('jobRecommendations');
+        jobContainer.innerHTML = '';  // Clear previous recommendations
+
+        jobRecommendations.forEach(job => {
+            const jobCard = document.createElement('div');
+            jobCard.classList.add('job-card');
+            
+            jobCard.innerHTML = `
+                <h3>${job.JobTitle}</h3>
+                <p><strong>Company:</strong> ${job.Company}</p>
+                <p><strong>Location:</strong> ${job.Location}</p>
+                <p><strong>Criteria:</strong> ${job.Criteria}</p>
+                <a href="${job.JobTitle_Link}" class="apply-btn" target="_blank">Apply Here</a>
+            `;
+            
+            jobContainer.appendChild(jobCard);
+        });
+
+        document.getElementById('error').style.display = 'none';  // Hide any previous errors
+    }
+
+    // Function to display errors
+    function showError(message) {
+        document.getElementById('error').style.display = 'block';
+        document.getElementById('errorMessage').textContent = message;
+        document.getElementById('result').style.display = 'none';  // Hide the result if there's an error
+    }
+</script>
+
+</body>
+</html>
